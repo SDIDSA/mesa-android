@@ -102,14 +102,18 @@ public class BirthdayPage extends WelcomePageWithBack implements Styleable {
     }
 
     @Override
-    public void init() {
+    public void hide() {
         hide(back, header, birthdate, next);
-        Platform.runAfter(() -> new SequenceAnimation(600)
+    }
+
+    @Override
+    public void init() {
+        new SequenceAnimation(600)
                 .addAnimation(parallelAnimation(-50, .7f, back, header))
                 .addAnimation(parallelAnimation(0, .7f, birthdate))
                 .addAnimation(parallelAnimation(50, .7f, next))
                 .setDelay(-400)
-                .setInterpolator(Interpolator.OVERSHOOT).start(), 300);
+                .setInterpolator(Interpolator.OVERSHOOT).start();
     }
 
     @Override

@@ -1,8 +1,6 @@
 package org.luke.mesa.abs.animation.abs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ParallelAnimation extends Animation {
     private final ArrayList<Animation> animations;

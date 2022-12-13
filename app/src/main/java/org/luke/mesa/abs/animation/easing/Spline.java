@@ -2,7 +2,7 @@ package org.luke.mesa.abs.animation.easing;
 
 import androidx.annotation.NonNull;
 
-public class SplineInterpolator implements Interpolator {
+public class Spline implements Interpolator {
 
 	private final float x1;
 	private final float y1;
@@ -15,7 +15,7 @@ public class SplineInterpolator implements Interpolator {
 	private static final float SAMPLE_INCREMENT = 1.0f / SAMPLE_SIZE;
 	private final float[] xSamples = new float[SAMPLE_SIZE + 1];
 
-	SplineInterpolator(float px1, float py1, float px2, float py2) {
+	Spline(float px1, float py1, float px2, float py2) {
 
 		this.x1 = px1;
 		this.y1 = py1;

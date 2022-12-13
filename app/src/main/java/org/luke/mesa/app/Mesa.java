@@ -16,7 +16,7 @@ public class Mesa extends App implements Styleable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadPage(new Welcome(this));
+        loadPage(Welcome.class);
         applyStyle(getStyle());
     }
 

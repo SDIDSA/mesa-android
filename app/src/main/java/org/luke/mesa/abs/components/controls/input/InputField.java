@@ -44,6 +44,7 @@ public class InputField extends FrameLayout implements Input, Styleable {
 
     private final Label prompt;
     private final Label errorLabel;
+    private final FrameLayout prompts;
     private final ParallelAnimation focus, unfocus;
     private final ParallelAnimation showError, hideError;
     private final Animation timer;
@@ -76,10 +77,12 @@ public class InputField extends FrameLayout implements Input, Styleable {
         prompt = new Label(owner, promptText);
         prompt.setFont(new Font(14f, Font.WEIGHT_BOLD));
         prompt.setMaxLines(1);
+        prompt.setLines(1);
 
         errorLabel = new Label(owner, "");
         errorLabel.setFont(new Font(14f, Font.WEIGHT_BOLD));
         errorLabel.setMaxLines(1);
+        errorLabel.setLines(1);
 
         int errorBy = -ViewUtils.dipToPx(30, owner);
         errorLabel.setTranslationY(-errorBy);
@@ -115,13 +118,12 @@ public class InputField extends FrameLayout implements Input, Styleable {
         preInput.addView(input);
         ViewUtils.setPadding(preInput, 15, 0, 15, 0, owner);
 
-        FrameLayout prompts = new FrameLayout(owner);
+        prompts = new FrameLayout(owner);
         prompts.setPivotX(ViewUtils.dipToPx(15, owner));
         prompts.setPivotY(-ViewUtils.dipToPx(20, owner));
         prompts.setAlpha(.5f);
         prompts.setClickable(false);
         prompts.setFocusable(false);
-        prompts.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         ViewUtils.setPadding(prompts, 15, 20, 5, 20, owner);
 
         prompts.addView(prompt);
@@ -188,10 +190,20 @@ public class InputField extends FrameLayout implements Input, Styleable {
         applyStyle(owner.getStyle());
     }
 
+    public void setTextMinWidth(int width) {
+        prompts.setLayoutParams(new LayoutParams(ViewUtils.dipToPx(width, owner), ViewGroup.LayoutParams.WRAP_CONTENT));
+        preInput.setLayoutParams(new LayoutParams(ViewUtils.dipToPx(width, owner), ViewGroup.LayoutParams.WRAP_CONTENT));
+
+    }
+
     public void addPost(Image icon) {
         icon.setSize(35);
         ViewUtils.setPaddingUnified(icon, 6, owner);
         preInput.addView(icon);
+    }
+
+    public HBox getPreInput() {
+        return preInput;
     }
 
     public void addPre(View view) {

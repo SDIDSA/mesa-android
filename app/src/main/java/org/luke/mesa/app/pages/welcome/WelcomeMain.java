@@ -2,6 +2,7 @@ package org.luke.mesa.app.pages.welcome;
 
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.View;
 
 import org.luke.mesa.R;
 import org.luke.mesa.abs.App;
@@ -15,7 +16,6 @@ import org.luke.mesa.abs.components.controls.text.Label;
 import org.luke.mesa.abs.components.layout.linear.HBox;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
-import org.luke.mesa.abs.utils.Platform;
 import org.luke.mesa.abs.utils.ViewUtils;
 import org.luke.mesa.app.pages.welcome.register.PreRegister;
 import org.luke.mesa.data.property.Property;
@@ -77,17 +77,19 @@ public class WelcomeMain extends WelcomePage implements Styleable {
     }
 
     @Override
-    public void init() {
+    public void hide() {
         hide(top, center, welcome, join, register, login);
-        SequenceAnimation sa = new SequenceAnimation(600)
+    }
+
+    @Override
+    public void init() {
+        new SequenceAnimation(600)
                 .addAnimation(parallelAnimation(-50, .7f, top, center))
                 .addAnimation(parallelAnimation(0, .7f, welcome, join))
                 .addAnimation(parallelAnimation(50, .7f, register))
                 .addAnimation(parallelAnimation(50, .7f, login))
                 .setDelay(-400)
-                .setInterpolator(Interpolator.OVERSHOOT);
-
-        Platform.runAfter(sa::start, 300);
+                .setInterpolator(Interpolator.OVERSHOOT).start();
     }
 
     @Override

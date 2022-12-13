@@ -68,6 +68,10 @@ public abstract class WelcomePage extends FrameLayout {
         }
     }
 
+    public static void clearCache() {
+        cache.clear();
+    }
+
     private Welcome getWelcome() {
         if (welcome == null)
             welcome = (Welcome) owner.getLoaded();
@@ -85,8 +89,22 @@ public abstract class WelcomePage extends FrameLayout {
 
     public abstract boolean goBack();
 
+    public void hide() {
+
+    }
+
     public void init() {
         //For subclasses to implement
+    }
+
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        if (visibility == VISIBLE) {
+            init();
+        } else {
+            hide();
+        }
+        super.onWindowVisibilityChanged(visibility);
     }
 
     protected void hide(View... views) {
@@ -114,9 +132,9 @@ public abstract class WelcomePage extends FrameLayout {
         view.setScaleX(fromScale);
         view.setScaleY(fromScale);
         return new ParallelAnimation()
-                .addAnimation(new AlphaAnimation(view, 1f))
-                .addAnimation(new TranslateYAnimation(view, 0))
-                .addAnimation(new ScaleXYAnimation(view, 1));
+                .addAnimation(new AlphaAnimation(view, 1f).setOverrideFrom(0))
+                .addAnimation(new TranslateYAnimation(view, 0).setOverrideFrom(fromY))
+                .addAnimation(new ScaleXYAnimation(view, 1).setOverrideFrom(fromScale));
     }
 
     @Override

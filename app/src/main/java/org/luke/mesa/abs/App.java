@@ -20,6 +20,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import org.json.JSONArray;
 import org.luke.mesa.abs.components.Page;
 import org.luke.mesa.abs.components.controls.Font;
 import org.luke.mesa.abs.components.layout.overlay.Overlay;
@@ -34,6 +35,7 @@ import io.socket.client.Socket;
 
 public class App extends AppCompatActivity {
     private static final String MAIN_SOCKET = "main_socket";
+    private static final String SERVERS = "servarr";
     private final HashMap<String, Object> data = new HashMap<>();
 
     public Style dark, light;
@@ -93,15 +95,15 @@ public class App extends AppCompatActivity {
             Platform.runLater(() -> setStyle(isDarkMode(newConfig) ? dark_auto : light_auto));
     }
 
-    public void loadPage(Page page) {
+    public void loadPage(Class<? extends Page> pageType) {
         if (loaded != null) {
             root.removeView(loaded);
         }
-        loaded = page;
+        loaded = Page.getInstance(this, pageType);
+        if(loaded == null) return;
 
-        page.applyInsets(insets);
-
-        root.addView(page, 0);
+        loaded.applyInsets(insets);
+        root.addView(loaded, 0);
     }
 
     public void setBackgroundColor(int color) {
@@ -159,7 +161,8 @@ public class App extends AppCompatActivity {
         if (loadedOverlay != null) {
             loadedOverlay.hide();
         } else if (loaded == null || !loaded.onBack()) {
-            super.onBackPressed();
+            moveTaskToBack(false);
+            //super.onBackPressed();
         }
     }
 
@@ -180,9 +183,6 @@ public class App extends AppCompatActivity {
     public void applyStyle(Style style) {
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
         window.setStatusBarColor(Color.TRANSPARENT);
         window.setNavigationBarColor(Color.TRANSPARENT);
@@ -230,5 +230,17 @@ public class App extends AppCompatActivity {
 
     public Socket getMainSocket() {
         return getTypedData(MAIN_SOCKET, Socket.class);
+    }
+
+    public void putMainSocket(Socket socket) {
+        putData(MAIN_SOCKET, socket);
+    }
+
+    public void putServers(JSONArray servarr) {
+        data.put(SERVERS, servarr);
+    }
+
+    public JSONArray getServers() {
+        return getTypedData(SERVERS, JSONArray.class);
     }
 }

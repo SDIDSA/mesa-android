@@ -4,6 +4,7 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 
 import org.luke.mesa.abs.App;
+import org.luke.mesa.abs.animation.abs.Animation;
 import org.luke.mesa.abs.animation.abs.ParallelAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.AlphaAnimation;
@@ -49,14 +50,11 @@ public class Loading extends HBox {
         setTranslationX(-shift / 2);
 
         loader = new ParallelAnimation(500)
-                .addAnimation(new AlphaAnimation(rectangles[0], 1))
-                .addAnimation(new AlphaAnimation(rectangles[count - 1], 0))
-                .setInterpolator(Interpolator.EASE_OUT).setOnFinished(() -> {
-                    preLoad.run();
-                    loader.start();
-                });
+                .addAnimation(new AlphaAnimation(rectangles[0], 1).setOverrideFrom(0))
+                .addAnimation(new AlphaAnimation(rectangles[count - 1], 0).setOverrideFrom(1))
+                .setInterpolator(Interpolator.EASE_OUT).setCycleCount(Animation.INDEFINITE);
         for(int i = 0; i < count; i++) {
-            loader.addAnimation(new TranslateXAnimation(rectangles[i], 0));
+            loader.addAnimation(new TranslateXAnimation(rectangles[i], 0).setOverrideFrom(shift));
         }
     }
 

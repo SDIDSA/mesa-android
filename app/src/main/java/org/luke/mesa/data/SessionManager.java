@@ -1,11 +1,14 @@
 package org.luke.mesa.data;
 
 import org.luke.mesa.abs.App;
+import org.luke.mesa.abs.api.API;
 import org.luke.mesa.abs.utils.Threaded;
 import org.luke.mesa.data.beans.User;
 
+import java.net.URISyntaxException;
 import java.util.prefs.Preferences;
 
+import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public class SessionManager {
@@ -39,9 +42,16 @@ public class SessionManager {
         register.run();
     }
 
-    public static void storeSession(String token, App owner, String uid) {
+    public static void storeSession(String token, App owner, String uid) throws URISyntaxException {
         put(ACCESS_TOKEN, token);
-        registerSocket(owner.getMainSocket(), token, uid);
+        Socket socket = owner.getMainSocket();
+        if(socket == null) {
+            socket = IO.socket(API.BASE);
+            socket.connect();
+
+            owner.putMainSocket(socket);
+        }
+        registerSocket(socket, token, uid);
     }
 
     public static String getSession() {

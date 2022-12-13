@@ -25,7 +25,8 @@ public interface Input {
                 String key = obj.getString("key");
                 String val = obj.getString("value");
                 for (Input input : inputs) {
-                    if (input.getKey().equals(key)) {
+                    boolean global = key.equals("global");
+                    if (input.getKey().equals(key) || global) {
                         result.add(input);
                         if (obj.has("plus")) {
                             String plus = obj.getString("plus");
@@ -33,6 +34,7 @@ public interface Input {
                         } else {
                             input.setError(val);
                         }
+                        if(global) break;
                     }
                 }
             }

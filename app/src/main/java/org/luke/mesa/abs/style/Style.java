@@ -10,6 +10,7 @@ import org.luke.mesa.abs.utils.Assets;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class Style {
     private int accent;
@@ -18,7 +19,7 @@ public class Style {
     private boolean auto;
 
     private Style(HashMap<String, Integer> colors, int accent, boolean dark) {
-        this.colors = (HashMap<String, Integer>) colors.clone();
+        this.colors = new HashMap<>(colors);
         this.accent = accent;
         this.dark = dark;
         auto = true;
@@ -28,7 +29,7 @@ public class Style {
         this.dark = dark;
         colors = new HashMap<>();
         try {
-            JSONObject data = new JSONObject(Assets.readAsset(owner, "themes/" + styleName + ".json"));
+            JSONObject data = new JSONObject(Objects.requireNonNull(Assets.readAsset(owner, "themes/" + styleName + ".json")));
             Iterator<String> keys = data.keys();
 
             while (keys.hasNext()) {

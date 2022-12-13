@@ -36,6 +36,7 @@
 	"verify_later": "Later",
 	"verification_code": "Verification code",
 	"verification_code_incorrect": "Incorrect verification code",
+	"net_err" : "Couldn't get to the servers :(",
 
 	"resend_code": "Resend Code",
 	"hide": "Hide",

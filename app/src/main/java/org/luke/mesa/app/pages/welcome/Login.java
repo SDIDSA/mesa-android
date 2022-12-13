@@ -2,19 +2,25 @@ package org.luke.mesa.app.pages.welcome;
 
 import android.graphics.Color;
 import android.telephony.TelephonyManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.luke.mesa.abs.App;
 import org.luke.mesa.abs.animation.abs.ParallelAnimation;
 import org.luke.mesa.abs.animation.abs.SequenceAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.AlphaAnimation;
 import org.luke.mesa.abs.animation.view.LinearWidthAnimation;
+import org.luke.mesa.abs.animation.view.position.TranslateYAnimation;
 import org.luke.mesa.abs.api.Auth;
+import org.luke.mesa.abs.api.Session;
 import org.luke.mesa.abs.components.controls.Font;
 import org.luke.mesa.abs.components.controls.button.Button;
 import org.luke.mesa.abs.components.controls.input.Input;
@@ -24,11 +30,13 @@ import org.luke.mesa.abs.components.layout.overlay.country.CountryCodeOverlay;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
 import org.luke.mesa.abs.utils.DataUtils;
-import org.luke.mesa.abs.utils.Platform;
+import org.luke.mesa.abs.utils.ErrorHandler;
 import org.luke.mesa.abs.utils.ViewUtils;
 import org.luke.mesa.data.CountryCode;
+import org.luke.mesa.data.SessionManager;
 import org.luke.mesa.data.property.Property;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class Login extends WelcomePageWithBack implements Styleable {
@@ -61,37 +69,51 @@ public class Login extends WelcomePageWithBack implements Styleable {
         countryCodeOverlay = new CountryCodeOverlay(owner);
         countryCodeOverlay.setOnCountryCode(countryCodeProperty::set);
 
+        int countryCodeWidth = ViewUtils.dipToPx(70, owner);
+
         countryCode = new Label(owner, "");
         countryCode.setFont(new Font(16f));
-        countryCode.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT));
-        countryCode.setAlpha(0);
         countryCode.setFocusable(true);
         countryCode.setClickable(true);
         countryCode.setOnClickListener(e -> countryCodeOverlay.show());
+        countryCode.setLayoutParams(new FrameLayout.LayoutParams(countryCodeWidth, FrameLayout.LayoutParams.MATCH_PARENT));
+
         ViewUtils.setPadding(countryCode, 0, 25, 0, 13, owner);
+
+        FrameLayout preCountryCode = new FrameLayout(owner);
+        preCountryCode.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT));
+        preCountryCode.addView(countryCode);
+        preCountryCode.setAlpha(0);
+        preCountryCode.setTranslationY(countryCodeWidth / 4f);
 
         countryCodeProperty.addListener((obs, ov, nv) -> {
             if (nv != null) lastVal = nv;
-            countryCode.setKey(nv == null ? "" : (nv.getShortName() + "  " + nv.getCode()));
+            if(nv != null) {
+                countryCode.setKey(nv.getShortName() + "  " + nv.getCode());
+            }
         });
 
         ParallelAnimation showCode = new ParallelAnimation(400)
-                .addAnimation(new LinearWidthAnimation(countryCode, ViewUtils.dipToPx(70, owner)))
-                .addAnimation(new AlphaAnimation(countryCode, 1))
-                .setInterpolator(Interpolator.OVERSHOOT);
+                .addAnimation(new LinearWidthAnimation(preCountryCode, countryCodeWidth))
+                .addAnimation(new AlphaAnimation(preCountryCode, 1))
+                .addAnimation(new TranslateYAnimation(preCountryCode, 0))
+                .setInterpolator(Interpolator.EASE_OUT);
         ParallelAnimation hideCode = new ParallelAnimation(400)
-                .addAnimation(new LinearWidthAnimation(countryCode, ViewUtils.dipToPx(0, owner)))
-                .addAnimation(new AlphaAnimation(countryCode, 0))
+                .addAnimation(new LinearWidthAnimation(preCountryCode, 0))
+                .addAnimation(new AlphaAnimation(preCountryCode, 0))
+                .addAnimation(new TranslateYAnimation(preCountryCode, countryCodeWidth / 4f))
                 .setInterpolator(Interpolator.EASE_OUT);
 
         email_phone = new InputField(owner, "email_phone");
         email_phone.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
-        email_phone.addPre(countryCode);
+        email_phone.addPre(preCountryCode);
 
         String allowedChars = "0123456789 +-()";
         email_phone.valueProperty().addListener((obs, ov, nv) -> {
-            boolean number = (digitCount(nv) + (nv.startsWith("+") ? 0 : digitCount(countryCode.getText()))) > 6;
+            CountryCode cc = countryCodeProperty.get();
+            String coc = cc == null ? "" : cc.getCode();
+            boolean number = (digitCount(nv) + (nv.startsWith("+") ? 0 : digitCount(coc))) > 6;
             for (int i = 0; i < nv.length() && number; i++) {
                 char c = nv.charAt(i);
                 if (allowedChars.indexOf(c) == -1) {
@@ -158,7 +180,8 @@ public class Login extends WelcomePageWithBack implements Styleable {
             Phonenumber.PhoneNumber number = null;
             boolean isValid = false;
             try {
-                String code = countryCode.getText().toString();
+                CountryCode cc = countryCodeProperty.get();
+                String code = cc == null ? "" : cc.getCode();
                 number = PhoneNumberUtil.getInstance().parse(emailPhone, code);
                 isValid = PhoneNumberUtil.getInstance().isValidNumber(number);
             } catch (NumberParseException e) {
@@ -189,7 +212,13 @@ public class Login extends WelcomePageWithBack implements Styleable {
                 if (res.has("err")) {
                     Input.applyError(res, this);
                 } else {
-
+                    try {
+                        JSONObject user = res.getJSONObject("user");
+                        SessionManager.storeSession(res.getString("token"), owner, user.getString("id"));
+                        onSuccess(user);
+                    } catch (JSONException | URISyntaxException x) {
+                        ErrorHandler.handle(x, "login");
+                    }
                 }
             });
         });
@@ -197,6 +226,26 @@ public class Login extends WelcomePageWithBack implements Styleable {
         back.setOnClick(() -> previousInto(WelcomeMain.class));
 
         applyStyle(owner.getStyle());
+    }
+
+    private void onSuccess(JSONObject user) {
+        Session.getServers(servers -> {
+            try {
+                JSONArray servarr = servers.getJSONArray("servers");
+                owner.putServers(servarr);
+                owner.putData("user", user);
+
+                //TODO load next page, notably Session
+                owner.loadPage(null);
+            } catch (JSONException x) {
+                ErrorHandler.handle(x, "get servers");
+            }
+        });
+    }
+
+    @Override
+    public void hide() {
+        hide(back, welcomeBack, etsy, email_phone, password, login);
     }
 
     @Override
@@ -209,14 +258,13 @@ public class Login extends WelcomePageWithBack implements Styleable {
             owner.putData(REGISTERED_EMAIL_PHONE, null);
         }
 
-        hide(back, welcomeBack, etsy, email_phone, password, login);
-        Platform.runAfter(() -> new SequenceAnimation(600)
+        new SequenceAnimation(600)
                 .addAnimation(parallelAnimation(-50, .7f, welcomeBack, etsy, back))
                 .addAnimation(parallelAnimation(0, .7f, email_phone))
                 .addAnimation(parallelAnimation(0, .7f, password))
                 .addAnimation(parallelAnimation(50, .7f, login))
                 .setDelay(-400)
-                .setInterpolator(Interpolator.OVERSHOOT).start(), 300);
+                .setInterpolator(Interpolator.OVERSHOOT).start();
     }
 
     private int digitCount(CharSequence val) {

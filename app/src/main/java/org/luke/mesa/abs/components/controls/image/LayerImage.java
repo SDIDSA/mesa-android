@@ -29,6 +29,10 @@ public class LayerImage extends FrameLayout {
         }
     }
 
+    public Image getLayer(int index) {
+        return layers.get(index);
+    }
+
     public void addLayer(App owner, int res) {
         Image layer = new Image(owner, res);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(

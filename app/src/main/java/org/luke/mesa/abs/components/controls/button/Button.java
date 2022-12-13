@@ -1,7 +1,6 @@
 package org.luke.mesa.abs.components.controls.button;
 
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -51,10 +50,10 @@ public class Button extends FrameLayout {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     if (dimOnTouch)
-                        background.setColorFilter(0x30000000, PorterDuff.Mode.DARKEN);
+                        background.setAlpha(150);
                     break;
                 case MotionEvent.ACTION_UP:
-                    background.clearColorFilter();
+                    background.setAlpha(255);
                     view.performClick();
                     break;
             }

@@ -87,19 +87,24 @@ public class PhoneCodePage extends WelcomePageWithBack implements Styleable {
     }
 
     @Override
+    public void hide() {
+        hide(back, enter, sub, code, next, resend);
+    }
+
+    @Override
     public void init() {
         super.init();
+
         next.stopLoading();
         code.setValue("");
 
-        hide(back, enter, sub, code, next, resend);
-        Platform.runAfter(() -> new SequenceAnimation(600)
+        new SequenceAnimation(600)
                 .addAnimation(parallelAnimation(-50, .7f, back, enter, sub))
                 .addAnimation(parallelAnimation(0, .7f, code))
                 .addAnimation(parallelAnimation(50, .7f, next))
                 .addAnimation(parallelAnimation(50, .7f, resend))
                 .setDelay(-400)
-                .setInterpolator(Interpolator.OVERSHOOT).start(), 300);
+                .setInterpolator(Interpolator.OVERSHOOT).start();
     }
 
     @Override

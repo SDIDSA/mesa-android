@@ -9,6 +9,7 @@ public class SequenceAnimation extends Animation {
     private final ArrayList<Animation> animations;
     private Animation running = null;
     private long delay = 0;
+    private Thread runner;
 
     public SequenceAnimation(long duration) {
         super(duration);
@@ -36,10 +37,18 @@ public class SequenceAnimation extends Animation {
     }
 
     @Override
+    protected void init() {
+        for(Animation animation : animations) {
+            animation.init();
+        }
+        super.init();
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends Animation> T start() {
-        new Thread(() -> {
-            for (int i = 0; i < animations.size() - 1; i++) {
+        runner = new Thread(() -> {
+            for (int i = 0; i < animations.size() - 1 && !Thread.currentThread().isInterrupted(); i++) {
                 Animation current = animations.get(i);
                 Animation next = animations.get(i + 1);
                 current.start();
@@ -48,12 +57,17 @@ public class SequenceAnimation extends Animation {
                 next.start();
                 running = next;
             }
-        }).start();
+
+        });
+        runner.start();
         return (T) this;
     }
 
     @Override
     public void stop() {
+        if (runner != null && runner.isAlive())
+            runner.interrupt();
+
         if (running != null)
             running.stop();
     }
@@ -63,6 +77,23 @@ public class SequenceAnimation extends Animation {
     public <T extends Animation> T setInterpolator(Interpolator interpolator) {
         for (Animation animation : animations) {
             animation.setInterpolator(interpolator);
+        }
+        return (T) this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Animation> T setAutoReverse(boolean autoReverse) {
+        for (Animation animation : animations) {
+            animation.setAutoReverse(autoReverse);
+        }
+        return (T) this;
+    }
+
+    @Override
+    public <T extends Animation> T setCycleCount(int cycleCount) {
+        for (Animation animation : animations) {
+            animation.setCycleCount(cycleCount);
         }
         return (T) this;
     }

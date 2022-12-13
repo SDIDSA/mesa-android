@@ -17,7 +17,6 @@ public class Threaded {
         try {
             Thread.sleep(duration);
         } catch (InterruptedException x) {
-            ErrorHandler.handle(x, "wait");
             Thread.currentThread().interrupt();
         }
     }

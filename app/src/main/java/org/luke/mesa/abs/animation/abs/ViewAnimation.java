@@ -3,10 +3,13 @@ package org.luke.mesa.abs.animation.abs;
 import android.view.View;
 
 import org.luke.mesa.abs.utils.Platform;
+import org.luke.mesa.abs.utils.functional.FloatSupplier;
 import org.luke.mesa.abs.utils.functional.ObjectSupplier;
 
 public abstract class ViewAnimation extends ValueAnimation {
     private final View view;
+
+    private float overrideFrom = Float.MIN_NORMAL;
 
     private ObjectSupplier<Float> lateTo;
     public ViewAnimation(long duration, View view,float to) {
@@ -24,8 +27,13 @@ public abstract class ViewAnimation extends ValueAnimation {
         return this;
     }
 
+    public Animation setOverrideFrom(float overrideFrom) {
+        this.overrideFrom = overrideFrom;
+        return this;
+    }
+
     public void init() {
-        setFrom(getFrom(view));
+        setFrom(overrideFrom == Float.MIN_NORMAL ? getFrom(view) : overrideFrom);
         if(lateTo != null) {
             setTo(lateTo.get());
         }

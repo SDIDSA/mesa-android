@@ -1,8 +1,8 @@
 package org.luke.mesa.abs.animation.easing;
 
-public class LinearInterpolator implements Interpolator {
+public class EaseInOut implements Interpolator {
     @Override
     public float interpolate(float v) {
-        return v;
+        return v * v * (3.0f - 2.0f * v);
     }
 }
