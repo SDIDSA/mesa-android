@@ -2,7 +2,7 @@ package org.luke.mesa.abs.animation.view.padding;
 
 import android.view.View;
 
-import org.luke.mesa.abs.animation.abs.ViewAnimation;
+import org.luke.mesa.abs.animation.base.ViewAnimation;
 
 public class RightPaddingAnimation extends ViewAnimation {
     private int left, top, bottom;

@@ -4,9 +4,9 @@ import android.graphics.Color;
 
 import org.luke.mesa.R;
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.Animation;
-import org.luke.mesa.abs.animation.abs.ParallelAnimation;
-import org.luke.mesa.abs.animation.abs.SequenceAnimation;
+import org.luke.mesa.abs.animation.base.Animation;
+import org.luke.mesa.abs.animation.combine.ParallelAnimation;
+import org.luke.mesa.abs.animation.combine.SequenceAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.AlphaAnimation;
 import org.luke.mesa.abs.animation.view.position.TranslateYAnimation;
@@ -35,16 +35,16 @@ public class WelcomeImage extends LayerImage implements Styleable {
         float a = .6f;
         long duration = 1200;
         ParallelAnimation bounceSent = new ParallelAnimation()
-                .addAnimation(new TranslateYAnimation(getLayer(4), ty).setOverrideFrom(0))
-                .addAnimation(new TranslateYAnimation(getLayer(5), ty).setOverrideFrom(0))
-                .addAnimation(new AlphaAnimation(getLayer(4), a).setOverrideFrom(1))
-                .addAnimation(new AlphaAnimation(getLayer(5), a).setOverrideFrom(1));
+                .addAnimation(new TranslateYAnimation(getLayer(4), 0, ty))
+                .addAnimation(new TranslateYAnimation(getLayer(5), 0, ty))
+                .addAnimation(new AlphaAnimation(getLayer(4), 1, a))
+                .addAnimation(new AlphaAnimation(getLayer(5), 1, a));
 
         ParallelAnimation bounceReceived = new ParallelAnimation()
-                .addAnimation(new TranslateYAnimation(getLayer(0), ty).setOverrideFrom(0))
-                .addAnimation(new TranslateYAnimation(getLayer(1), ty).setOverrideFrom(0))
-                .addAnimation(new AlphaAnimation(getLayer(0), a).setOverrideFrom(1))
-                .addAnimation(new AlphaAnimation(getLayer(1), a).setOverrideFrom(1));
+                .addAnimation(new TranslateYAnimation(getLayer(0), 0, ty))
+                .addAnimation(new TranslateYAnimation(getLayer(1), 0, ty))
+                .addAnimation(new AlphaAnimation(getLayer(0), 1, a))
+                .addAnimation(new AlphaAnimation(getLayer(1), 1, a));
 
         bounce = new SequenceAnimation(duration)
                 .addAnimation(bounceReceived)
@@ -58,11 +58,25 @@ public class WelcomeImage extends LayerImage implements Styleable {
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         if (visibility == VISIBLE) {
+            reset();
             bounce.start();
         } else {
             bounce.stop();
+            reset();
         }
         super.onWindowVisibilityChanged(visibility);
+    }
+
+    private void reset() {
+        getLayer(0).setAlpha(1f);
+        getLayer(1).setAlpha(1f);
+        getLayer(4).setAlpha(1f);
+        getLayer(5).setAlpha(1f);
+
+        getLayer(0).setTranslationY(0);
+        getLayer(1).setTranslationY(0);
+        getLayer(4).setTranslationY(0);
+        getLayer(5).setTranslationY(0);
     }
 
     @Override

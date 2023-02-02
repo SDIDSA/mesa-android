@@ -11,6 +11,7 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.luke.mesa.abs.api.ApiCall;
+import org.luke.mesa.abs.utils.ErrorHandler;
 import org.luke.mesa.abs.utils.functional.JsonConsumer;
 import org.luke.mesa.abs.utils.Platform;
 
@@ -43,6 +44,12 @@ public class MultiPartApiCall extends ApiCall {
 
 		JSONObject res = new JSONObject(EntityUtils.toString(response.getEntity()));
 
-		Platform.runLater(() -> onResult.accept(res));
+		Platform.runLater(() -> {
+			try {
+				onResult.accept(res);
+			} catch (Exception x) {
+				ErrorHandler.handle(x, "handle response for API call to " + path);
+			}
+		});
 	}
 }

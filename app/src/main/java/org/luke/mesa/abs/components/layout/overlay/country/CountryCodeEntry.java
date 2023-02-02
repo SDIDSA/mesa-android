@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.text.Label;
 import org.luke.mesa.abs.components.layout.linear.HBox;
 import org.luke.mesa.abs.style.Style;

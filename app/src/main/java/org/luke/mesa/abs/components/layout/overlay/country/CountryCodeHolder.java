@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.luke.mesa.abs.utils.ErrorHandler;
 import org.luke.mesa.abs.utils.functional.ObjectConsumer;
 import org.luke.mesa.data.CountryCode;
 
@@ -14,7 +15,7 @@ public class CountryCodeHolder extends RecyclerView.ViewHolder implements View.O
     private ObjectConsumer<CountryCode> onAction;
     public CountryCodeHolder(CountryCodeEntry entry) {
         super(entry);
-        entry.setOnClickListener(this::onClick);
+        entry.setOnClickListener(this);
         this.entry = entry;
     }
 
@@ -26,7 +27,11 @@ public class CountryCodeHolder extends RecyclerView.ViewHolder implements View.O
     @Override
     public void onClick(View view) {
         if(onAction != null && data != null) {
-            onAction.accept(data);
+            try {
+                onAction.accept(data);
+            } catch (Exception x) {
+                ErrorHandler.handle(x , "handle country code selection");
+            }
         }
     }
 

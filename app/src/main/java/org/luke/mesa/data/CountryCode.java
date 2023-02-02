@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import org.luke.mesa.abs.App;
 import org.luke.mesa.abs.utils.DataUtils;
+import org.luke.mesa.abs.utils.ErrorHandler;
 import org.luke.mesa.abs.utils.Platform;
 import org.luke.mesa.abs.utils.functional.ObjectConsumer;
 
@@ -36,7 +37,13 @@ public class CountryCode {
                 }
             }
             res.sort((o1, o2) -> -Integer.compare(o1.score, o2.score));
-            Platform.runLater(() -> onResult.accept(res.stream().map(sc -> sc.code).collect(Collectors.toList())));
+            Platform.runLater(() -> {
+                try {
+                    onResult.accept(res.stream().map(sc -> sc.code).collect(Collectors.toList()));
+                } catch (Exception x) {
+                    ErrorHandler.handle(x, "handling search result for country code [ " + match + " ]");
+                }
+            });
         }).start();
     }
 

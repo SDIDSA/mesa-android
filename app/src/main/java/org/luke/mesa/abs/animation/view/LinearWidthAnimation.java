@@ -3,7 +3,7 @@ package org.luke.mesa.abs.animation.view;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import org.luke.mesa.abs.animation.abs.ViewAnimation;
+import org.luke.mesa.abs.animation.base.ViewAnimation;
 
 public class LinearWidthAnimation extends ViewAnimation {
     private int height;

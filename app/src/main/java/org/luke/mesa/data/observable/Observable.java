@@ -7,6 +7,7 @@ public interface Observable<T> {
     T get();
     void addListener(ChangeListener<? super T> listener);
     void removeListener(ChangeListener<? super T> listener);
+    void clearListeners();
 
     BooleanBinding isEqualTo(Observable<T> other);
     BooleanBinding isEqualTo(T other);

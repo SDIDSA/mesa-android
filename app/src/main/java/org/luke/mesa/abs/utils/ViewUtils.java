@@ -1,10 +1,14 @@
 package org.luke.mesa.abs.utils;
 
+import static android.util.TypedValue.COMPLEX_UNIT_SP;
+
 import android.content.Context;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import org.luke.mesa.abs.components.controls.text.font.Font;
 
 public class ViewUtils {
     public static void setPaddingUnified(View view, float padding, Context context) {
@@ -33,8 +37,8 @@ public class ViewUtils {
         return view;
     }
 
-    public static int pxToDip(int input, Context context) {
-        return (int) (pxToDip((float) input, context) + .5);
+    public static float pxToDip(int input, Context context) {
+        return pxToDip((float) input, context);
     }
 
     public static float pxToDip(float px, Context context) {
@@ -45,27 +49,27 @@ public class ViewUtils {
         return (int) (dipToPx((float) input, context) + .5);
     }
 
-    public static float dipToPx(float input, Context context) {
-        return input * context.getResources().getDisplayMetrics().density;
+    public static int dipToPx(float input, Context context) {
+        return (int) (input * context.getResources().getDisplayMetrics().density);
     }
 
-    public static void setMarginTop(View view, Context context, int val) {
+    public static void setMarginTop(View view, Context context, float val) {
         setMargin(view, context, 0, val, 0, 0);
     }
 
-    public static void setMarginLeft(View view, Context context, int val) {
+    public static void setMarginLeft(View view, Context context, float val) {
         setMargin(view, context, val, 0, 0, 0);
     }
 
-    public static void setMarginBottom(View view, Context context, int val) {
+    public static void setMarginBottom(View view, Context context, float val) {
         setMargin(view, context, 0, 0, 0, val);
     }
 
-    public static void setMarginUnified(View view, Context context, int val) {
+    public static void setMarginUnified(View view, Context context, float val) {
         setMargin(view, context, val, val, val, val);
     }
 
-    public static void setMargin(View view, Context context, int left, int top, int right, int bottom) {
+    public static void setMargin(View view, Context context, float left, float top, float right, float bottom) {
         ViewGroup.LayoutParams old = view.getLayoutParams();
         if (old instanceof LinearLayout.LayoutParams) {
             LinearLayout.LayoutParams marginLayoutParams = duplicateLinearLayoutParams((LinearLayout.LayoutParams) old);
@@ -78,6 +82,10 @@ public class ViewUtils {
         }
     }
 
+    public static void setFont(EditText input, Font font) {
+        input.setTypeface(font.getFont());
+        input.setTextSize(COMPLEX_UNIT_SP, font.getSize());
+    }
 
     private static LinearLayout.LayoutParams duplicateLinearLayoutParams(LinearLayout.LayoutParams old) {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(

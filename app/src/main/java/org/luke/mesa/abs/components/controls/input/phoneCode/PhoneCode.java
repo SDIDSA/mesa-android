@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.ParallelAnimation;
+import org.luke.mesa.abs.animation.combine.ParallelAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.SpacingAnimation;
 import org.luke.mesa.abs.animation.view.corner_radii.CornerRadiiAnimation;
@@ -130,7 +130,7 @@ public class PhoneCode extends FrameLayout implements Styleable, Input {
 
         et.setOnFocusChangeListener((v, f) -> {
             if (!f)
-                owner.hideKeyboard(et);
+                owner.hideKeyboard();
         });
 
         value.addListener((obs, ov, nv) -> {

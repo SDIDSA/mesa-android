@@ -1,18 +1,15 @@
 package org.luke.mesa.abs.components.controls.image;
 
-import android.content.ClipData;
-import android.graphics.PorterDuff;
-import android.view.View;
 import android.view.ViewGroup;
 
 import org.luke.mesa.abs.App;
 import org.luke.mesa.abs.utils.ViewUtils;
 
 public class Image extends androidx.appcompat.widget.AppCompatImageView {
-    private final App owner;
+    protected final App owner;
     private Runnable onClick;
 
-    public Image(App owner, int id) {
+    public Image(App owner) {
         super(owner);
         this.owner = owner;
 
@@ -22,14 +19,9 @@ public class Image extends androidx.appcompat.widget.AppCompatImageView {
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        setOnClickListener(e -> {
-            if (onClick != null) {
-                onClick.run();
-            }
-        });
+        setOnClickListener(e -> fire());
 
         setFocusable(false);
-        setImageResource(id);
     }
 
     public void setOnClick(Runnable onClick) {
@@ -37,23 +29,19 @@ public class Image extends androidx.appcompat.widget.AppCompatImageView {
         setFocusable(true);
     }
 
-    public void setHeight(int height) {
+    public void setHeight(float height) {
         getLayoutParams().height = ViewUtils.dipToPx(height, owner);
         requestLayout();
     }
 
-    public void setWidth(int width) {
+    public void setWidth(float width) {
         getLayoutParams().width = ViewUtils.dipToPx(width, owner);
         requestLayout();
     }
 
-    public void setSize(int size) {
+    public void setSize(float size) {
         setWidth(size);
         setHeight(size);
-    }
-
-    public void setColor(int color) {
-        setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
     public void fire() {

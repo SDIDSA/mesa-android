@@ -4,11 +4,12 @@ import android.graphics.drawable.GradientDrawable;
 import android.widget.FrameLayout;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.Animation;
+import org.luke.mesa.abs.animation.base.Animation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.position.TranslateXAnimation;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.button.Button;
+import org.luke.mesa.abs.components.controls.text.font.FontWeight;
 import org.luke.mesa.abs.components.layout.linear.HBox;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
@@ -115,7 +116,7 @@ public class RegisterTypes extends FrameLayout implements Styleable {
             this.type = type;
             ViewUtils.spacer(owner, this);
             ViewUtils.setPaddingUnified(this, 10, owner);
-            setFont(new Font(14, Font.WEIGHT_BOLD));
+            setFont(new Font(14, FontWeight.MEDIUM));
             setRadius(5);
             setDimOnTouch(false);
             applyStyle(owner.getStyle());

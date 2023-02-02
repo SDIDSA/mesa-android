@@ -51,6 +51,11 @@ public class Binding<T> implements Observable<T> {
         listeners.remove(listener);
     }
 
+    @Override
+    public void clearListeners() {
+        listeners.clear();
+    }
+
     public BooleanBinding isEqualTo(Observable<T> other) {
         return new BooleanBinding(() -> get().equals(other.get()), this, other);
     }

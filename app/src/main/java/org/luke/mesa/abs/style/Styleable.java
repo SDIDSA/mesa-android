@@ -1,10 +1,13 @@
 package org.luke.mesa.abs.style;
 
+import android.util.Log;
+
 import org.luke.mesa.data.observable.ChangeListener;
 import org.luke.mesa.data.observable.Observable;
 import org.luke.mesa.data.property.Property;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 public interface Styleable {
     void applyStyle(Style style);
@@ -14,8 +17,19 @@ public interface Styleable {
         bindStyleWeak(node, style);
     }
 
+    ArrayList<WeakReference<Styleable>> bound_cache = new ArrayList<>();
+
+    private static boolean isBound(Styleable node) {
+        bound_cache.removeIf(n -> n.get() == null);
+        for(WeakReference<Styleable> nodeRef : bound_cache) {
+            if(nodeRef.get() == node) return true;
+        }
+        return false;
+    }
+
     private static void bindStyleWeak(Styleable node, Property<Style> style) {
         node.applyStyle(style.get());
+        if(isBound(node)) return;
         WeakReference<Styleable> weakNode = new WeakReference<>(node);
         ChangeListener<Style> listener = new ChangeListener<>() {
             @Override
@@ -25,10 +39,12 @@ public interface Styleable {
                         weakNode.get().applyStyle(nv);
                     }
                 } else {
+                    Log.i("removing", node.getClass().getSimpleName());
                     style.removeListener(this);
                 }
             }
         };
         style.addListener(listener);
+        bound_cache.add(weakNode);
     }
 }

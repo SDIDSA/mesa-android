@@ -9,15 +9,16 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.SequenceAnimation;
+import org.luke.mesa.abs.animation.combine.SequenceAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.api.Auth;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.button.Button;
 import org.luke.mesa.abs.components.controls.input.Input;
 import org.luke.mesa.abs.components.controls.input.phone_email.EmailPhoneInput;
 import org.luke.mesa.abs.components.controls.input.phone_email.RegisterType;
 import org.luke.mesa.abs.components.controls.text.Label;
+import org.luke.mesa.abs.components.controls.text.font.FontWeight;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
 import org.luke.mesa.abs.utils.ViewUtils;
@@ -44,11 +45,11 @@ public class PreRegister extends WelcomePageWithBack implements Styleable {
         super(owner);
 
         enter = new Label(owner, "enter_phone_email");
-        enter.setFont(new Font(24f, Font.WEIGHT_BOLD));
+        enter.setFont(new Font(24f, FontWeight.BOLD));
         ViewUtils.setMarginTop(enter, owner, 35);
 
         next = new Button(owner, "next");
-        next.setFont(new Font(16, Font.WEIGHT_BOLD));
+        next.setFont(new Font(16, FontWeight.BOLD));
         ViewUtils.setMarginTop(next, owner, 40);
 
         input = new EmailPhoneInput(owner);
@@ -137,7 +138,5 @@ public class PreRegister extends WelcomePageWithBack implements Styleable {
         enter.setTextColor(style.getHeaderPrimary());
         next.setBackgroundColor(style.getAccent());
         next.setTextFill(Color.WHITE);
-
-        setBackgroundColor(style.getBackgroundMobilePrimary());
     }
 }

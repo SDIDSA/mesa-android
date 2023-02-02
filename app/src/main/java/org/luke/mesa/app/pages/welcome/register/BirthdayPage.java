@@ -3,15 +3,16 @@ package org.luke.mesa.app.pages.welcome.register;
 import android.graphics.Color;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.SequenceAnimation;
+import org.luke.mesa.abs.animation.combine.SequenceAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.api.Auth;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.button.Button;
 import org.luke.mesa.abs.components.controls.input.Input;
 import org.luke.mesa.abs.components.controls.input.date.DateInput;
 import org.luke.mesa.abs.components.controls.input.phone_email.RegisterType;
 import org.luke.mesa.abs.components.controls.text.Label;
+import org.luke.mesa.abs.components.controls.text.font.FontWeight;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
 import org.luke.mesa.abs.utils.Platform;
@@ -33,7 +34,7 @@ public class BirthdayPage extends WelcomePageWithBack implements Styleable {
         super(owner);
 
         header = new Label(owner, "enter_birthday");
-        header.setFont(new Font(24, Font.WEIGHT_BOLD));
+        header.setFont(new Font(24, FontWeight.BOLD));
         ViewUtils.setMarginTop(header, owner, 10);
 
         birthdate = new DateInput(owner, "birth_date", "birth_date");
@@ -43,7 +44,7 @@ public class BirthdayPage extends WelcomePageWithBack implements Styleable {
         birthdate.setDate(Date.of(2000, 1, 1));
 
         next = new Button(owner, "create_account");
-        next.setFont(new Font(16, Font.WEIGHT_BOLD));
+        next.setFont(new Font(16, FontWeight.BOLD));
 
         ViewUtils.setMarginTop(next, owner, 30);
 
@@ -125,7 +126,5 @@ public class BirthdayPage extends WelcomePageWithBack implements Styleable {
 
         next.setBackgroundColor(style.getAccent());
         next.setTextFill(Color.WHITE);
-
-        setBackgroundColor(style.getBackgroundMobilePrimary());
     }
 }

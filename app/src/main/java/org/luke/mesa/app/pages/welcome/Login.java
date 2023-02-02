@@ -13,25 +13,27 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.ParallelAnimation;
-import org.luke.mesa.abs.animation.abs.SequenceAnimation;
+import org.luke.mesa.abs.animation.combine.ParallelAnimation;
+import org.luke.mesa.abs.animation.combine.SequenceAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.AlphaAnimation;
 import org.luke.mesa.abs.animation.view.LinearWidthAnimation;
 import org.luke.mesa.abs.animation.view.position.TranslateYAnimation;
 import org.luke.mesa.abs.api.Auth;
 import org.luke.mesa.abs.api.Session;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.button.Button;
 import org.luke.mesa.abs.components.controls.input.Input;
 import org.luke.mesa.abs.components.controls.input.InputField;
 import org.luke.mesa.abs.components.controls.text.Label;
+import org.luke.mesa.abs.components.controls.text.font.FontWeight;
 import org.luke.mesa.abs.components.layout.overlay.country.CountryCodeOverlay;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
 import org.luke.mesa.abs.utils.DataUtils;
 import org.luke.mesa.abs.utils.ErrorHandler;
 import org.luke.mesa.abs.utils.ViewUtils;
+import org.luke.mesa.app.pages.session.SessionPage;
 import org.luke.mesa.data.CountryCode;
 import org.luke.mesa.data.SessionManager;
 import org.luke.mesa.data.property.Property;
@@ -59,7 +61,7 @@ public class Login extends WelcomePageWithBack implements Styleable {
         super(owner);
 
         welcomeBack = new Label(owner, "welcome_back");
-        welcomeBack.setFont(new Font(32f, 700));
+        welcomeBack.setFont(new Font(32f, FontWeight.BOLD));
         ViewUtils.setMarginTop(welcomeBack, owner, 15);
 
         etsy = new Label(owner, "etsya");
@@ -165,7 +167,7 @@ public class Login extends WelcomePageWithBack implements Styleable {
         ViewUtils.setMarginTop(password, owner, 10);
 
         login = new Button(owner, "login");
-        login.setFont(new Font(16, Font.WEIGHT_BOLD));
+        login.setFont(new Font(16, FontWeight.BOLD));
         ViewUtils.setMarginTop(login, owner, 30);
 
         addView(welcomeBack);
@@ -208,9 +210,9 @@ public class Login extends WelcomePageWithBack implements Styleable {
             login.startLoading();
 
             Auth.auth(emailPhone, password.getValue(), res -> {
-                login.stopLoading();
                 if (res.has("err")) {
                     Input.applyError(res, this);
+                    login.stopLoading();
                 } else {
                     try {
                         JSONObject user = res.getJSONObject("user");
@@ -235,8 +237,7 @@ public class Login extends WelcomePageWithBack implements Styleable {
                 owner.putServers(servarr);
                 owner.putData("user", user);
 
-                //TODO load next page, notably Session
-                owner.loadPage(null);
+                owner.loadPage(SessionPage.class);
             } catch (JSONException x) {
                 ErrorHandler.handle(x, "get servers");
             }
@@ -251,6 +252,8 @@ public class Login extends WelcomePageWithBack implements Styleable {
     @Override
     public void init() {
         super.init();
+
+        login.stopLoading();
 
         String registered = owner.getString(REGISTERED_EMAIL_PHONE);
         if (registered != null) {
@@ -284,7 +287,5 @@ public class Login extends WelcomePageWithBack implements Styleable {
         countryCode.setTextColor(style.getTextNormal());
         login.setBackgroundColor(style.getAccent());
         login.setTextFill(Color.WHITE);
-
-        setBackgroundColor(style.getBackgroundMobilePrimary());
     }
 }

@@ -1,28 +1,44 @@
 package org.luke.mesa.abs.components.layout.overlay;
 
-import android.util.Log;
+import android.graphics.drawable.GradientDrawable;
 import android.view.MotionEvent;
 
+import androidx.core.graphics.Insets;
+
 import org.luke.mesa.abs.App;
+import org.luke.mesa.abs.animation.base.Animation;
+import org.luke.mesa.abs.animation.base.ValueAnimation;
+import org.luke.mesa.abs.animation.combine.ParallelAnimation;
+import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.position.TranslateYAnimation;
 import org.luke.mesa.abs.components.layout.linear.VBox;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
 import org.luke.mesa.abs.utils.ViewUtils;
+import org.luke.mesa.abs.utils.functional.ObjectSupplier;
 import org.luke.mesa.data.property.Property;
 
 public abstract class SlideOverlay extends Overlay implements Styleable {
     protected final VBox list;
-    private int height;
-
+    protected final GradientDrawable background;
+    protected int height;
     private float initTY, initPY, lastY, velocity;
-
     private long lastTime;
 
     public SlideOverlay(App owner) {
         super(owner);
 
+        background = new GradientDrawable();
+        int cr = ViewUtils.dipToPx(10, owner);
+        background.setCornerRadii(new float[]{
+                cr, cr,
+                cr, cr,
+                0, 0,
+                0, 0
+        });
+
         list = new VBox(owner);
+        list.setBackground(background);
         list.setTranslationY(owner.getScreenHeight());
 
         list.setOnClickListener(e -> {
@@ -31,12 +47,18 @@ public abstract class SlideOverlay extends Overlay implements Styleable {
 
         addView(list);
 
+
+
         addToShow(new TranslateYAnimation(list, 0)
-                .setLateTo(() -> (float) (owner.getScreenHeight() - height)));
+                .setLateTo(() -> (float) (owner.getScreenHeight() - height))
+                .setLateFrom(() -> (float) owner.getScreenHeight()));
 
         addToHide(new TranslateYAnimation(list, 0)
                 .setLateTo(() -> (float) owner.getScreenHeight()));
 
+
+        Animation releaseShow = new TranslateYAnimation(300, list, 0)
+                .setLateTo(() -> (float) (owner.getScreenHeight() - height)).setInterpolator(Interpolator.EASE_OUT);
 
         setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
@@ -51,13 +73,13 @@ public abstract class SlideOverlay extends Overlay implements Styleable {
                         v.performClick();
                     } else {
                         long dy = System.currentTimeMillis() - lastTime;
-                        if(dy > 300) {
+                        if (dy > 300) {
                             velocity = 0;
                         }
                         if (velocity > 10) {
                             hide();
                         } else if (velocity < -10) {
-                            show();
+                            releaseShow.start();
                         } else {
                             int min = owner.getScreenHeight() - height;
                             int max = owner.getScreenHeight();
@@ -65,10 +87,9 @@ public abstract class SlideOverlay extends Overlay implements Styleable {
                             if (list.getTranslationY() > mid) {
                                 hide();
                             } else {
-                                show();
+                                releaseShow.start();
                             }
                         }
-
                     }
 
                     break;
@@ -92,7 +113,6 @@ public abstract class SlideOverlay extends Overlay implements Styleable {
         this.height = height;
         LayoutParams params = new LayoutParams(owner.getScreenWidth(), height);
         list.setLayoutParams(params);
-        ViewUtils.setPadding(list, 15, 15, 15, 0, owner);
     }
 
     protected void setHeightFactor(double factor) {
@@ -101,7 +121,7 @@ public abstract class SlideOverlay extends Overlay implements Styleable {
 
     @Override
     public void applyStyle(Style style) {
-        list.setBackgroundColor(style.getBackgroundMobilePrimary());
+        background.setColor(style.getBackgroundMobilePrimary());
     }
 
     @Override

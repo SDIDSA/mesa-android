@@ -2,7 +2,7 @@ package org.luke.mesa.abs.animation.view;
 
 import android.view.View;
 
-import org.luke.mesa.abs.animation.abs.ViewAnimation;
+import org.luke.mesa.abs.animation.base.ViewAnimation;
 
 public class AlphaAnimation extends ViewAnimation {
 
@@ -12,6 +12,10 @@ public class AlphaAnimation extends ViewAnimation {
 
     public AlphaAnimation(View view, float to) {
         super(view, to);
+    }
+
+    public AlphaAnimation(View view, float from, float to) {
+        super(view, from, to);
     }
 
     @Override

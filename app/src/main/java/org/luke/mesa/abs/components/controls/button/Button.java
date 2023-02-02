@@ -7,9 +7,10 @@ import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.scratches.Loading;
 import org.luke.mesa.abs.components.controls.text.Label;
+import org.luke.mesa.abs.components.controls.text.font.FontWeight;
 import org.luke.mesa.abs.utils.ViewUtils;
 import org.luke.mesa.data.property.BooleanProperty;
 
@@ -40,7 +41,6 @@ public class Button extends FrameLayout {
 
         addView(label);
 
-        loading.setAlpha(0);
         loading.setColor(Color.WHITE);
 
         setOnTouchListener((view, event) -> {
@@ -59,6 +59,8 @@ public class Button extends FrameLayout {
             }
             return true;
         });
+
+        setFont(new Font(14, FontWeight.BOLD));
 
         setOnClickListener(e -> {
             if (onClick != null) {
@@ -88,9 +90,8 @@ public class Button extends FrameLayout {
         if (indexOfChild(loading) == -1)
             addView(loading, 0);
 
-        label.setAlpha(0);
-        loading.setAlpha(1);
         loading.startLoading();
+        label.setAlpha(0);
         setClickable(false);
     }
 
@@ -100,7 +101,6 @@ public class Button extends FrameLayout {
 
         loading.stopLoading();
         label.setAlpha(1);
-        loading.setAlpha(0);
         setClickable(true);
     }
 

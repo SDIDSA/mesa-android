@@ -4,6 +4,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import org.luke.mesa.abs.utils.ErrorHandler;
 import org.luke.mesa.abs.utils.functional.StringConsumer;
 import org.luke.mesa.data.property.StringProperty;
 
@@ -14,7 +15,11 @@ public class InputUtils {
             public void beforeTextChanged(CharSequence ov, int i, int i1, int i2) {}
             @Override
             public void onTextChanged(CharSequence nv, int i, int i1, int i2) {
-                onChange.accept(String.valueOf(nv));
+                try {
+                    onChange.accept(String.valueOf(nv));
+                } catch (Exception x) {
+                    ErrorHandler.handle(x, "set change listener on input");
+                }
             }
             @Override
             public void afterTextChanged(Editable editable) {}

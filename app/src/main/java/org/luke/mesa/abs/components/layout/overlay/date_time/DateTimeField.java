@@ -8,8 +8,8 @@ import android.widget.LinearLayout;
 import androidx.annotation.ColorInt;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.ValueAnimation;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.animation.base.ValueAnimation;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.text.Label;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;

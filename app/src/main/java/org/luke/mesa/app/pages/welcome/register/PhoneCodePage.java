@@ -5,14 +5,15 @@ import android.graphics.Color;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.SequenceAnimation;
+import org.luke.mesa.abs.animation.combine.SequenceAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.api.Auth;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.button.Button;
 import org.luke.mesa.abs.components.controls.input.Input;
 import org.luke.mesa.abs.components.controls.input.phoneCode.PhoneCode;
 import org.luke.mesa.abs.components.controls.text.Label;
+import org.luke.mesa.abs.components.controls.text.font.FontWeight;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
 import org.luke.mesa.abs.utils.Platform;
@@ -32,7 +33,7 @@ public class PhoneCodePage extends WelcomePageWithBack implements Styleable {
         super(owner);
 
         enter = new Label(owner, "enter_phone_code");
-        enter.setFont(new Font(24f, Font.WEIGHT_BOLD));
+        enter.setFont(new Font(24f, FontWeight.BOLD));
         enter.setTextAlignment(TEXT_ALIGNMENT_CENTER);
         ViewUtils.setMarginTop(enter, owner, 25);
 
@@ -45,11 +46,11 @@ public class PhoneCodePage extends WelcomePageWithBack implements Styleable {
         ViewUtils.setMarginTop(code, owner, 40);
 
         next = new Button(owner, "verify");
-        next.setFont(new Font(16, Font.WEIGHT_BOLD));
+        next.setFont(new Font(16, FontWeight.BOLD));
         ViewUtils.setMarginTop(next, owner, 20);
 
         resend = new Button(owner, "resend_code");
-        resend.setFont(new Font(16, Font.WEIGHT_BOLD));
+        resend.setFont(new Font(16, FontWeight.BOLD));
         ViewUtils.setMarginTop(resend, owner, 10);
 
         addView(enter);
@@ -117,7 +118,5 @@ public class PhoneCodePage extends WelcomePageWithBack implements Styleable {
         next.setTextFill(Color.WHITE);
         resend.setBackgroundColor(style.getSecondaryButtonBack());
         resend.setTextFill(Color.WHITE);
-
-        setBackgroundColor(style.getBackgroundMobilePrimary());
     }
 }

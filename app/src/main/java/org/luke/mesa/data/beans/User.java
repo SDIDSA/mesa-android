@@ -2,7 +2,6 @@ package org.luke.mesa.data.beans;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Consumer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,8 +14,8 @@ import org.luke.mesa.data.property.StringProperty;
 public class User extends Bean {
 	public static final String USER_ID = "user_id";
 	
-	private static HashMap<String, User> cache = new HashMap<>();
-	private static HashMap<String, ArrayList<UserConsumer>> waiting = new HashMap<>();
+	private static final HashMap<String, User> cache = new HashMap<>();
+	private static final HashMap<String, ArrayList<UserConsumer>> waiting = new HashMap<>();
 
 	public static synchronized void getForId(String id, UserConsumer onUser) {
 		User res = cache.get(id);
@@ -33,14 +32,18 @@ public class User extends Bean {
 						}
 						waiting.remove(id);
 					}catch(JSONException x) {
-						ErrorHandler.handle(x, "get user");
+						ErrorHandler.handle(x, "get user by id");
 					}
 
 				});
 			}
 			pending.add(onUser);
 		} else {
-			onUser.accept(res);
+			try {
+				onUser.accept(res);
+			} catch (Exception x) {
+				ErrorHandler.handle(x, "get user by id");
+			}
 		}
 	}
 	
@@ -48,16 +51,16 @@ public class User extends Bean {
 		cache.clear();
 	}
 
-	private StringProperty id;
-	private StringProperty email;
-	private StringProperty username;
-	private StringProperty password;
-	private StringProperty phone;
-	private StringProperty avatar;
-	private StringProperty birthDate;
-	private BooleanProperty emailConfirmed;
+	private final StringProperty id;
+	private final StringProperty email;
+	private final StringProperty username;
+	private final StringProperty password;
+	private final StringProperty phone;
+	private final StringProperty avatar;
+	private final StringProperty birthDate;
+	private final BooleanProperty emailConfirmed;
 	
-	private BooleanProperty online;
+	private final BooleanProperty online;
 
 	public User(JSONObject obj) {
 		id = new StringProperty();

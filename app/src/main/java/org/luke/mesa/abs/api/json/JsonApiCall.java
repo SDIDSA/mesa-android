@@ -1,6 +1,7 @@
 package org.luke.mesa.abs.api.json;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -11,6 +12,7 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.luke.mesa.abs.api.ApiCall;
+import org.luke.mesa.abs.utils.ErrorHandler;
 import org.luke.mesa.abs.utils.functional.JsonConsumer;
 import org.luke.mesa.abs.utils.Platform;
 
@@ -48,7 +50,20 @@ public class JsonApiCall extends ApiCall {
 
 		JSONObject res = new JSONObject(EntityUtils.toString(response.getEntity()));
 
-		Platform.runLater(() -> onResult.accept(res));
+		Platform.runLater(() -> {
+			try {
+				onResult.accept(res);
+			} catch (Exception x) {
+				ErrorHandler.handle(x, "handle response for API call to " + path);
+			}
+		});
 	}
 
+	@Override
+	public String toString() {
+		return "JsonApiCall{" +
+				"path='" + path + '\'' +
+				", params=" + Arrays.toString(params) +
+				'}';
+	}
 }

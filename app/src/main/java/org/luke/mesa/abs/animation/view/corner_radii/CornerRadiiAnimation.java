@@ -3,7 +3,7 @@ package org.luke.mesa.abs.animation.view.corner_radii;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 
-import org.luke.mesa.abs.animation.abs.ViewAnimation;
+import org.luke.mesa.abs.animation.base.ViewAnimation;
 
 public class CornerRadiiAnimation extends ViewAnimation {
     public CornerRadiiAnimation(long duration, View view, float to) {

@@ -7,6 +7,7 @@ import androidx.core.graphics.Insets;
 
 import org.luke.mesa.abs.App;
 import org.luke.mesa.abs.style.Styleable;
+import org.luke.mesa.abs.utils.Platform;
 import org.luke.mesa.abs.utils.ViewUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,14 +34,22 @@ public abstract class Page extends FrameLayout implements Styleable {
                 e.printStackTrace();
             }
         } else {
-            if (found.getParent() != null)
-                ((ViewGroup) found.getParent()).removeView(found);
+            if (found.getParent() != null) {
+                if(owner.getLoaded() != found) {
+                    ((ViewGroup) found.getParent()).removeView(found);
+                }
+            }
+
         }
         if (type.isInstance(found)) {
             return type.cast(found);
         } else {
             return null;
         }
+    }
+
+    public static void clearCache() {
+        cache.clear();
     }
 
     protected void setPadding(int padding) {

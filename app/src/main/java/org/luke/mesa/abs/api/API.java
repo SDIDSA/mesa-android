@@ -1,5 +1,6 @@
 package org.luke.mesa.abs.api;
 
+import android.os.Build;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -17,8 +18,9 @@ import org.luke.mesa.abs.utils.functional.StringConsumer;
 public class API {
     public static final String VERSION = "1.0.0";
     public static final String DEV_BASE = "http://10.0.2.2:4000/";
+    public static final String TEST_BASE = "http://192.168.43.110:4000/";
     public static final String REL_BASE = "https://mesa69.herokuapp.com/";
-    public static final String BASE = DEV_BASE;
+    public static final String BASE = Build.FINGERPRINT.contains("generic") ? DEV_BASE : TEST_BASE;
     public static final String INVITE_BASE = "https://mesa-invite.tk/";
     public static final String INVITE_CODE = "hTKzmak";
     public static JSONObject netErr;
@@ -38,13 +40,13 @@ public class API {
     public static void asyncBasicGet(String path, String action, StringConsumer onResult,
                                      Param... params) {
         asyncExec(new BasicApiGet(path, params), action, res -> {
-			try {
-				onResult.accept(res.getString("body"));
-			} catch (JSONException x) {
-				x.printStackTrace();
-				ErrorHandler.handle(x, action);
-			}
-		}, null);
+            try {
+                onResult.accept(res.getString("body"));
+            } catch (JSONException x) {
+                x.printStackTrace();
+                ErrorHandler.handle(x, action);
+            }
+        }, null);
     }
 
     public static void asyncJsonPost(String path, String action, JsonConsumer onResult, String session,
@@ -62,6 +64,7 @@ public class API {
             @Override
             public void run() {
                 try {
+                    Log.i("api call", call.toString());
                     call.execute(result -> {
                         try {
                             Log.i("api response", result.toString(4));
@@ -72,9 +75,15 @@ public class API {
                             onResult.accept(result);
                     }, session);
                 } catch (Exception x) {
-                    x.printStackTrace();
                     ErrorHandler.handle(x, action);
-                    Platform.runLater(() -> onResult.accept(netErr));
+                    Platform.runLater(() -> {
+                        try {
+                            onResult.accept(netErr);
+                        } catch (Exception e) {
+                            x.printStackTrace();
+                            ErrorHandler.handle(x, "report exception for [ " + action + " ] action");
+                        }
+                    });
                 }
             }
         }.start();

@@ -15,6 +15,11 @@
 	"pass_hint": "Password must be 6-72 characters",
 	"jalm": "Just a little more...",
 
+	"dms" : "Direct Messages",
+	"conv_search" : "Find or start a conversation",
+	"no_dms" : "You don't have any direct messages... yet!",
+	"add_friends": "Add Friends",
+
 	"enter_birthday": "Enter your birthday",
 
 	"about": "About Mesa",

@@ -4,8 +4,8 @@ import android.telephony.TelephonyManager;
 import android.widget.FrameLayout;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.Animation;
-import org.luke.mesa.abs.animation.abs.ParallelAnimation;
+import org.luke.mesa.abs.animation.base.Animation;
+import org.luke.mesa.abs.animation.combine.ParallelAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.AlphaAnimation;
 import org.luke.mesa.abs.animation.view.LinearWidthAnimation;
@@ -46,11 +46,22 @@ public class EmailPhoneInput extends VBox implements Input {
         int countryShown = ViewUtils.dipToPx(110, owner);
         country = new CountryCodeInput(owner, "Country Code");
         country.setLayoutParams(new FrameLayout.LayoutParams(0, FrameLayout.LayoutParams.WRAP_CONTENT));
-
         country.setTextMinWidth(110);
 
         HBox inputCont = new HBox(owner);
         inputCont.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
+
+        inputCont.setClipToOutline(false);
+        inputCont.setClipChildren(false);
+        inputCont.setClipToPadding(false);
+
+        country.setClipToOutline(false);
+        country.setClipChildren(false);
+        country.setClipToPadding(false);
+
+        setClipToOutline(false);
+        setClipChildren(false);
+        setClipToPadding(false);
 
         inputCont.addView(country);
         inputCont.addView(input);

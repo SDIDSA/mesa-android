@@ -16,17 +16,18 @@ import androidx.annotation.ColorInt;
 
 import org.luke.mesa.R;
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.Animation;
-import org.luke.mesa.abs.animation.abs.ParallelAnimation;
-import org.luke.mesa.abs.animation.abs.ValueAnimation;
+import org.luke.mesa.abs.animation.base.Animation;
+import org.luke.mesa.abs.animation.combine.ParallelAnimation;
+import org.luke.mesa.abs.animation.base.ValueAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.AlphaAnimation;
 import org.luke.mesa.abs.animation.view.position.TranslateYAnimation;
-import org.luke.mesa.abs.animation.view.scale.ScaleX;
+import org.luke.mesa.abs.animation.view.scale.ScaleXAnimation;
 import org.luke.mesa.abs.animation.view.scale.ScaleXYAnimation;
-import org.luke.mesa.abs.components.controls.Font;
-import org.luke.mesa.abs.components.controls.image.Image;
+import org.luke.mesa.abs.components.controls.text.font.Font;
+import org.luke.mesa.abs.components.controls.image.ColorIcon;
 import org.luke.mesa.abs.components.controls.text.Label;
+import org.luke.mesa.abs.components.controls.text.font.FontWeight;
 import org.luke.mesa.abs.components.layout.linear.HBox;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
@@ -50,10 +51,10 @@ public class InputField extends FrameLayout implements Input, Styleable {
     private final Animation timer;
 
     private final String key;
-    private final Image clear;
+    private final ColorIcon clear;
     private boolean success = false;
     private boolean error = false;
-    private Image showPassword = null;
+    private ColorIcon showPassword = null;
     private boolean passShown = false;
 
     public InputField(App owner, String promptText) {
@@ -75,12 +76,12 @@ public class InputField extends FrameLayout implements Input, Styleable {
         params.weight = 1;
 
         prompt = new Label(owner, promptText);
-        prompt.setFont(new Font(14f, Font.WEIGHT_BOLD));
+        prompt.setFont(new Font(14f, FontWeight.MEDIUM));
         prompt.setMaxLines(1);
         prompt.setLines(1);
 
         errorLabel = new Label(owner, "");
-        errorLabel.setFont(new Font(14f, Font.WEIGHT_BOLD));
+        errorLabel.setFont(new Font(14f, FontWeight.MEDIUM));
         errorLabel.setMaxLines(1);
         errorLabel.setLines(1);
 
@@ -143,13 +144,13 @@ public class InputField extends FrameLayout implements Input, Styleable {
         });
 
         focus = new ParallelAnimation(200)
-                .addAnimation(new ScaleX(prompts, .75f))
+                .addAnimation(new ScaleXAnimation(prompts, .75f))
                 .addAnimation(new ScaleXYAnimation(prompts, .75f))
                 .addAnimation(new AlphaAnimation(prompts, 1f))
                 .setInterpolator(Interpolator.EASE_OUT);
 
         unfocus = new ParallelAnimation(200)
-                .addAnimation(new ScaleX(prompts, 1))
+                .addAnimation(new ScaleXAnimation(prompts, 1))
                 .addAnimation(new ScaleXYAnimation(prompts, 1))
                 .addAnimation(new AlphaAnimation(prompts, .5f))
                 .setInterpolator(Interpolator.EASE_OUT);
@@ -167,7 +168,7 @@ public class InputField extends FrameLayout implements Input, Styleable {
             }
         });
 
-        clear = new Image(owner, R.drawable.clear);
+        clear = new ColorIcon(owner, R.drawable.clear);
         clear.setHeight(20);
         clear.setWidth(20);
         clear.setVisibility(INVISIBLE);
@@ -176,7 +177,7 @@ public class InputField extends FrameLayout implements Input, Styleable {
         valueProperty().addListener((obs, ov, nv) -> {
             clear.setVisibility(nv.isEmpty() ? INVISIBLE : VISIBLE);
             clearError();
-            if (ov.isEmpty() && !nv.isEmpty()) {
+            if (ov != null && ov.isEmpty() && !nv.isEmpty()) {
                 unfocus.stop();
                 focus.start();
             }
@@ -186,7 +187,7 @@ public class InputField extends FrameLayout implements Input, Styleable {
 
         InputUtils.bindToProperty(input, value);
 
-        preInput.setBackground(background);
+        setBackground(background);
         applyStyle(owner.getStyle());
     }
 
@@ -196,14 +197,10 @@ public class InputField extends FrameLayout implements Input, Styleable {
 
     }
 
-    public void addPost(Image icon) {
+    public void addPost(ColorIcon icon) {
         icon.setSize(35);
         ViewUtils.setPaddingUnified(icon, 6, owner);
         preInput.addView(icon);
-    }
-
-    public HBox getPreInput() {
-        return preInput;
     }
 
     public void addPre(View view) {
@@ -217,7 +214,7 @@ public class InputField extends FrameLayout implements Input, Styleable {
     public void setHidden(boolean hidden) {
         if (hidden) {
             input.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            showPassword = new Image(owner, R.drawable.show_password);
+            showPassword = new ColorIcon(owner, R.drawable.show_password);
             showPassword.setColor(Color.WHITE);
             addPost(showPassword);
 

@@ -6,16 +6,17 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Mesa"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Mesa"
+        android:theme="@style/Theme.Mesa.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".app.Mesa"
             android:configChanges="uiMode|screenSize"
             android:exported="true"
-            android:theme="@style/Theme.Mesa.NoActionBar">
+            android:theme="@style/Theme.Mesa.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

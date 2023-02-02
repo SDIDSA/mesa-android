@@ -2,14 +2,13 @@ package org.luke.mesa.app.pages.welcome;
 
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import androidx.core.graphics.Insets;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.ParallelAnimation;
+import org.luke.mesa.abs.animation.combine.ParallelAnimation;
 import org.luke.mesa.abs.animation.view.AlphaAnimation;
 import org.luke.mesa.abs.animation.view.position.TranslateYAnimation;
 import org.luke.mesa.abs.animation.view.scale.ScaleXYAnimation;
@@ -58,8 +57,12 @@ public abstract class WelcomePage extends FrameLayout {
                 e.printStackTrace();
             }
         } else {
-            if (found.getParent() != null)
-                ((ViewGroup) found.getParent()).removeView(found);
+            if (found.getParent() != null) {
+                Welcome page = ((Welcome) found.getParent());
+                if (page.getLoaded() != found)
+                    page.removeView(found);
+            }
+
         }
         if (type.isInstance(found)) {
             return type.cast(found);
@@ -132,9 +135,9 @@ public abstract class WelcomePage extends FrameLayout {
         view.setScaleX(fromScale);
         view.setScaleY(fromScale);
         return new ParallelAnimation()
-                .addAnimation(new AlphaAnimation(view, 1f).setOverrideFrom(0))
-                .addAnimation(new TranslateYAnimation(view, 0).setOverrideFrom(fromY))
-                .addAnimation(new ScaleXYAnimation(view, 1).setOverrideFrom(fromScale));
+                .addAnimation(new AlphaAnimation(view, 0, 1f))
+                .addAnimation(new TranslateYAnimation(view, fromY, 0))
+                .addAnimation(new ScaleXYAnimation(view, fromScale, 1));
     }
 
     @Override

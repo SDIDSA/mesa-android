@@ -3,20 +3,21 @@ package org.luke.mesa.abs.components.layout.overlay.country;
 import androidx.core.graphics.Insets;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.components.controls.input.countryCode.CountryCodeSearch;
-import org.luke.mesa.abs.components.layout.overlay.SlideOverlay;
+import org.luke.mesa.abs.components.controls.input.SearchInput;
+import org.luke.mesa.abs.components.layout.overlay.PartialSlideOverlay;
 import org.luke.mesa.abs.style.Styleable;
 import org.luke.mesa.abs.utils.functional.ObjectConsumer;
 import org.luke.mesa.data.CountryCode;
 
-public class CountryCodeOverlay extends SlideOverlay implements Styleable {
+public class CountryCodeOverlay extends PartialSlideOverlay implements Styleable {
     private ObjectConsumer<CountryCode> onCountryCode;
 
     private final CountryCodeList codeList;
     public CountryCodeOverlay(App owner) {
-        super(owner);
+        super(owner, .7);
 
-        CountryCodeSearch search = new CountryCodeSearch(owner);
+        SearchInput search = new SearchInput(owner);
+        search.setHint("search");
 
         codeList = new CountryCodeList(owner);
         codeList.setOnAction(code -> {
@@ -31,7 +32,6 @@ public class CountryCodeOverlay extends SlideOverlay implements Styleable {
         list.addView(search);
         list.addView(codeList);
 
-        setHeightFactor(.7);
         applyStyle(owner.getStyle());
     }
 
@@ -40,7 +40,7 @@ public class CountryCodeOverlay extends SlideOverlay implements Styleable {
     }
 
     @Override
-    public void applyInsets(Insets insets) {
+    public void applySystemInsets(Insets insets) {
         codeList.setPadding(0,0,0,insets.bottom);
     }
 }

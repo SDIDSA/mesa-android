@@ -1,5 +1,8 @@
 package org.luke.mesa.data;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import org.luke.mesa.abs.App;
 import org.luke.mesa.abs.api.API;
 import org.luke.mesa.abs.utils.Threaded;
@@ -14,18 +17,26 @@ import io.socket.client.Socket;
 public class SessionManager {
     private static final String ACCESS_TOKEN = "access_token";
 
+    private static SharedPreferences prefs;
+
+    public static void init(App owner) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(owner);
+    }
+
     //	private static HashMap<String, String> data = new HashMap<>();
     private SessionManager() {
 
     }
 
     public static void put(String key, String value) {
-        Preferences.userRoot().put(key, value);
+        if(prefs == null) throw new IllegalStateException("the preferences object hasn't been initialized");
+        prefs.edit().putString(key,value).apply();
 //		data.put(key, value);
     }
 
     public static String get(String key) {
-        return Preferences.userRoot().get(key, null);
+        if(prefs == null) throw new IllegalStateException("the preferences object hasn't been initialized");
+        return prefs.getString(key, null);
 //		return data.get(key);
     }
 
@@ -45,12 +56,6 @@ public class SessionManager {
     public static void storeSession(String token, App owner, String uid) throws URISyntaxException {
         put(ACCESS_TOKEN, token);
         Socket socket = owner.getMainSocket();
-        if(socket == null) {
-            socket = IO.socket(API.BASE);
-            socket.connect();
-
-            owner.putMainSocket(socket);
-        }
         registerSocket(socket, token, uid);
     }
 
@@ -59,7 +64,8 @@ public class SessionManager {
     }
 
     public static void clearSession() {
-        Preferences.userRoot().remove(ACCESS_TOKEN);
+        if(prefs == null) throw new IllegalStateException("the preferences object hasn't been initialized");
+        prefs.edit().remove(ACCESS_TOKEN).apply();
 //		data.remove(ACCESS_TOKEN);
     }
 }

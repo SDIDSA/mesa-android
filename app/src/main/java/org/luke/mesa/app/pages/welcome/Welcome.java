@@ -3,8 +3,8 @@ package org.luke.mesa.app.pages.welcome;
 import androidx.core.graphics.Insets;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.Animation;
-import org.luke.mesa.abs.animation.abs.ParallelAnimation;
+import org.luke.mesa.abs.animation.base.Animation;
+import org.luke.mesa.abs.animation.combine.ParallelAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.AlphaAnimation;
 import org.luke.mesa.abs.animation.view.position.TranslateXAnimation;
@@ -43,9 +43,9 @@ public class Welcome extends Page {
         if (running != null && running.isRunning())
             return;
 
+        owner.hideKeyboard();
 
         new Thread(() -> {
-            if (running != null && running.isRunning()) return;
             AtomicReference<WelcomePage> page = new AtomicReference<>();
             WelcomePage old = loaded;
             if (old != null)
@@ -73,13 +73,17 @@ public class Welcome extends Page {
 
             Platform.runLater(() -> {
                 loaded = page.get();
-                loaded.applyInsets(owner.getInsets());
+                loaded.applyInsets(owner.getSystemInsets());
                 loaded.setAlpha(0);
                 loaded.setScaleX(1);
                 loaded.setScaleY(1);
                 loaded.setTranslationX(0);
             });
         }).start();
+    }
+
+    public WelcomePage getLoaded() {
+        return loaded;
     }
 
     @Override

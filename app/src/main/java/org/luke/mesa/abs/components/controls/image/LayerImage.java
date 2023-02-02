@@ -1,8 +1,6 @@
 package org.luke.mesa.abs.components.controls.image;
 
-import android.content.ClipData;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -11,7 +9,7 @@ import org.luke.mesa.abs.App;
 import java.util.ArrayList;
 
 public class LayerImage extends FrameLayout {
-    private final ArrayList<Image> layers;
+    private final ArrayList<ColorIcon> layers;
 
     public LayerImage(App owner, int... layerIds) {
         super(owner);
@@ -24,17 +22,17 @@ public class LayerImage extends FrameLayout {
     }
 
     public void setOnClick(Runnable onClick) {
-        for(Image layer : layers) {
+        for(ColorIcon layer : layers) {
             layer.setOnClick(onClick);
         }
     }
 
-    public Image getLayer(int index) {
+    public ColorIcon getLayer(int index) {
         return layers.get(index);
     }
 
     public void addLayer(App owner, int res) {
-        Image layer = new Image(owner, res);
+        ColorIcon layer = new ColorIcon(owner, res);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);

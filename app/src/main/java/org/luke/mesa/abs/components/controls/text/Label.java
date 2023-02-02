@@ -4,9 +4,10 @@ import android.util.TypedValue;
 import android.widget.FrameLayout;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.locale.Locale;
 import org.luke.mesa.abs.locale.Localized;
+import org.luke.mesa.abs.utils.ViewUtils;
 import org.luke.mesa.data.property.Property;
 
 import java.util.ArrayList;
@@ -56,6 +57,10 @@ public class Label extends androidx.appcompat.widget.AppCompatTextView implement
             params.set(i, param);
         }
         applyLocale(owner.getLocale().get());
+    }
+
+    public void setLineSpacing(float spacing) {
+        setLineSpacing(ViewUtils.dipToPx(spacing, owner), 1);
     }
 
     @Override

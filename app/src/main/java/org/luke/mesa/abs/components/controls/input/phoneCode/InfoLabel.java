@@ -3,14 +3,15 @@ package org.luke.mesa.abs.components.controls.input.phoneCode;
 import android.view.Gravity;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.Animation;
-import org.luke.mesa.abs.animation.abs.ParallelAnimation;
-import org.luke.mesa.abs.animation.abs.ValueAnimation;
+import org.luke.mesa.abs.animation.base.Animation;
+import org.luke.mesa.abs.animation.combine.ParallelAnimation;
+import org.luke.mesa.abs.animation.base.ValueAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.animation.view.AlphaAnimation;
 import org.luke.mesa.abs.animation.view.position.TranslateYAnimation;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.text.Label;
+import org.luke.mesa.abs.components.controls.text.font.FontWeight;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
 import org.luke.mesa.abs.utils.ViewUtils;
@@ -27,7 +28,7 @@ public class InfoLabel extends Label implements Styleable {
         super(owner, "");
         this.colorSupplier = colorSupplier;
 
-        setFont(new Font(14f, Font.WEIGHT_BOLD));
+        setFont(new Font(14f, FontWeight.BOLD));
         setMaxLines(1);
         setLayoutGravity(Gravity.CENTER);
 

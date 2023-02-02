@@ -59,6 +59,10 @@ public class Rectangle extends View {
     public Rectangle(App owner, double width, double height) {
         this(owner);
 
+        setSize(width, height);
+    }
+
+    public void setSize(double width, double height) {
         setWidth(width);
         setHeight(height);
     }

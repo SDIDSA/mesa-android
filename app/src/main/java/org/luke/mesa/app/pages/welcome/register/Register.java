@@ -3,14 +3,15 @@ package org.luke.mesa.app.pages.welcome.register;
 import android.graphics.Color;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.animation.abs.SequenceAnimation;
+import org.luke.mesa.abs.animation.combine.SequenceAnimation;
 import org.luke.mesa.abs.animation.easing.Interpolator;
 import org.luke.mesa.abs.api.Auth;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.button.Button;
 import org.luke.mesa.abs.components.controls.input.Input;
 import org.luke.mesa.abs.components.controls.input.InputField;
 import org.luke.mesa.abs.components.controls.text.Label;
+import org.luke.mesa.abs.components.controls.text.font.FontWeight;
 import org.luke.mesa.abs.components.controls.text.transformationMethods.AllCaps;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
@@ -33,11 +34,11 @@ public class Register extends WelcomePageWithBack implements Styleable {
         super(owner);
 
         header = new Label(owner, "register");
-        header.setFont(new Font(24, Font.WEIGHT_BOLD));
+        header.setFont(new Font(24, FontWeight.BOLD));
         ViewUtils.setMarginTop(header, owner, 10);
 
         pau = new Label(owner, "pau");
-        pau.setFont(new Font(14, Font.WEIGHT_BOLD));
+        pau.setFont(new Font(14, FontWeight.BOLD));
         pau.setTransformationMethod(new AllCaps());
         pau.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         ViewUtils.setMargin(pau, owner, 3, 25, 0, 0);
@@ -62,7 +63,7 @@ public class Register extends WelcomePageWithBack implements Styleable {
         ViewUtils.setMarginTop(password, owner, 20);
 
         next = new Button(owner, "next");
-        next.setFont(new Font(16, Font.WEIGHT_BOLD));
+        next.setFont(new Font(16, FontWeight.BOLD));
 
 
         ViewUtils.setMarginTop(next, owner, 20);
@@ -124,7 +125,5 @@ public class Register extends WelcomePageWithBack implements Styleable {
         pass_hint.setTextColor(style.getChannelsDefault());
         next.setBackgroundColor(style.getAccent());
         next.setTextFill(Color.WHITE);
-
-        setBackgroundColor(style.getBackgroundMobilePrimary());
     }
 }

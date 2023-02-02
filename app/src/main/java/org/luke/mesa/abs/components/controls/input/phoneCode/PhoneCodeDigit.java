@@ -5,7 +5,7 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 
 import org.luke.mesa.abs.App;
-import org.luke.mesa.abs.components.controls.Font;
+import org.luke.mesa.abs.components.controls.text.font.Font;
 import org.luke.mesa.abs.components.controls.text.Label;
 import org.luke.mesa.abs.style.Style;
 import org.luke.mesa.abs.style.Styleable;
